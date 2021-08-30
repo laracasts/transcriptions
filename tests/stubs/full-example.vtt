@@ -1,0 +1,794 @@
+WEBVTT
+
+1
+00:00:03.210 --> 00:00:04.110
+In this Larabit,
+
+2
+00:00:04.110 --> 00:00:05.630
+I'll give you some basic advice
+
+3
+00:00:05.630 --> 00:00:07.170
+for how to extract
+
+4
+00:00:07.170 --> 00:00:09.860
+interaction traits for your tasks.
+
+5
+00:00:09.860 --> 00:00:11.200
+It's a neat little pattern.
+
+6
+00:00:11.200 --> 00:00:12.520
+And I'll give you an example.
+
+7
+00:00:12.520 --> 00:00:14.460
+If I switch this test class here,
+
+8
+00:00:14.460 --> 00:00:15.530
+actually what you're looking at
+
+9
+00:00:15.530 --> 00:00:17.670
+is part of the Laracasts code base.
+
+10
+00:00:17.670 --> 00:00:20.350
+And we're handling the changing of an email address,
+
+11
+00:00:20.350 --> 00:00:22.940
+which is simple, but actually for Laracasts,
+
+12
+00:00:22.940 --> 00:00:24.760
+a number of things need to happen
+
+13
+00:00:24.760 --> 00:00:26.330
+if you update your email.
+
+14
+00:00:26.330 --> 00:00:27.320
+For example,
+
+15
+00:00:27.320 --> 00:00:30.380
+yes, we have to update the record in the database,
+
+16
+00:00:30.380 --> 00:00:33.640
+but then we also need to record internal activity
+
+17
+00:00:33.640 --> 00:00:35.500
+that your email address has changed.
+
+18
+00:00:35.500 --> 00:00:39.000
+We also need to fire off an email to the original address
+
+19
+00:00:39.000 --> 00:00:41.520
+for the account, just as a security measure.
+
+20
+00:00:41.520 --> 00:00:43.690
+"Hey, heads-up your email address was changed.
+
+21
+00:00:43.690 --> 00:00:45.320
+If you didn't plan for this,
+
+22
+00:00:45.320 --> 00:00:47.030
+let us know and we'll have a look."
+
+23
+00:00:47.030 --> 00:00:48.400
+But then there's even other things,
+
+24
+00:00:48.400 --> 00:00:50.660
+like if you update your email address,
+
+25
+00:00:50.660 --> 00:00:53.700
+well, Laracasts will also update the email address
+
+26
+00:00:53.700 --> 00:00:56.290
+for your corresponding Stripe account.
+
+27
+00:00:56.290 --> 00:00:59.090
+And that is a third-party billing service.
+
+28
+00:00:59.090 --> 00:01:01.050
+So in other words, any Laracasts subscription
+
+29
+00:01:01.050 --> 00:01:04.590
+is hooked up to a Stripe customer account.
+
+30
+00:01:04.590 --> 00:01:05.880
+That's how that works.
+
+31
+00:01:05.880 --> 00:01:07.600
+So if you want to update your email address,
+
+32
+00:01:07.600 --> 00:01:11.180
+we should also update your Stripe email address on file to
+
+33
+00:01:11.180 --> 00:01:13.930
+make sure that any of those automatic receipts are sent to
+
+34
+00:01:13.930 --> 00:01:14.970
+the new address.
+
+35
+00:01:14.970 --> 00:01:15.803
+Right?
+
+36
+00:01:15.803 --> 00:01:17.400
+Anyways, you get the idea.
+
+37
+00:01:17.400 --> 00:01:19.370
+So let's have a quick look here.
+
+38
+00:01:19.370 --> 00:01:21.030
+It updates the email address.
+
+39
+00:01:21.030 --> 00:01:21.863
+All right.
+
+40
+00:01:21.863 --> 00:01:24.190
+I've extracted this little signInEmail method,
+
+41
+00:01:24.190 --> 00:01:27.170
+very simple, create a user with a given email address,
+
+42
+00:01:27.170 --> 00:01:29.460
+sign them in and then return that user.
+
+43
+00:01:29.460 --> 00:01:30.840
+Super basic.
+
+44
+00:01:30.840 --> 00:01:31.940
+Okay.
+
+45
+00:01:31.940 --> 00:01:35.320
+So create an account with this email and sign it in.
+
+46
+00:01:35.320 --> 00:01:37.350
+Next, we're going to make a PATCH request
+
+47
+00:01:37.350 --> 00:01:39.730
+to update your account
+
+48
+00:01:39.730 --> 00:01:42.000
+and this corresponds to your settings page.
+
+49
+00:01:42.000 --> 00:01:43.810
+All right. Again, very simple.
+
+50
+00:01:43.810 --> 00:01:46.610
+So, let's try to update it to a new email address.
+
+51
+00:01:46.610 --> 00:01:49.440
+And as a result, if we refresh that user,
+
+52
+00:01:49.440 --> 00:01:51.530
+their email address should be the new one.
+
+53
+00:01:51.530 --> 00:01:53.440
+Again, super basic here.
+
+54
+00:01:53.440 --> 00:01:54.273
+We give it a run
+
+55
+00:01:55.190 --> 00:01:57.180
+and it passes. Okay.
+
+56
+00:01:57.180 --> 00:01:59.600
+But now let's scroll down to this other example.
+
+57
+00:01:59.600 --> 00:02:01.690
+It updates the Stripe customer
+
+58
+00:02:01.690 --> 00:02:03.510
+when an email address has changed.
+
+59
+00:02:03.510 --> 00:02:06.230
+Okay, let's see how we can make this work.
+
+60
+00:02:06.230 --> 00:02:08.790
+I'm going to begin by copying a lot of this,
+
+61
+00:02:08.790 --> 00:02:10.950
+but now I'm not interested in checking
+
+62
+00:02:10.950 --> 00:02:12.610
+the local email address.
+
+63
+00:02:12.610 --> 00:02:16.280
+I instead effectively want to make an API request to fetch
+
+64
+00:02:16.280 --> 00:02:18.830
+the customer on the Stripe end.
+
+65
+00:02:18.830 --> 00:02:20.860
+And then I check the email address.
+
+66
+00:02:20.860 --> 00:02:22.690
+So it sounds like I need to begin
+
+67
+00:02:22.690 --> 00:02:25.610
+by creating a subscription for this user
+
+68
+00:02:25.610 --> 00:02:27.360
+and reference the subscription,
+
+69
+00:02:27.360 --> 00:02:29.890
+and we're going to put them on the monthly accounts
+
+70
+00:02:29.890 --> 00:02:31.313
+and I will call create().
+
+71
+00:02:32.240 --> 00:02:34.320
+But now here's a little tricky thing.
+
+72
+00:02:34.320 --> 00:02:35.940
+In order to create a subscription,
+
+73
+00:02:35.940 --> 00:02:39.380
+we need a billing token to go along with it
+
+74
+00:02:39.380 --> 00:02:41.600
+and just think of this as a token
+
+75
+00:02:41.600 --> 00:02:44.530
+that represents a debit or credit card.
+
+76
+00:02:44.530 --> 00:02:46.120
+If we're going to put you on a monthly plan,
+
+77
+00:02:46.120 --> 00:02:48.210
+then we gotta bill your credit card, right?
+
+78
+00:02:48.210 --> 00:02:51.740
+So, how do I create a token when I'm not working with a
+
+79
+00:02:51.740 --> 00:02:55.040
+registration form; I'm instead working from a test?
+
+80
+00:02:55.040 --> 00:02:56.830
+Well, if I'm using Stripe,
+
+81
+00:02:56.830 --> 00:02:59.740
+we researched the documentation and they tell us,
+
+82
+00:02:59.740 --> 00:03:03.310
+use this token class that you get as part of their SDK.
+
+83
+00:03:03.310 --> 00:03:05.330
+We're going to create a new token.
+
+84
+00:03:05.330 --> 00:03:07.476
+When we do this, we give it a card
+
+85
+00:03:07.476 --> 00:03:09.600
+and we just heard code the number.
+
+86
+00:03:09.600 --> 00:03:14.600
+So Stripe offers a test card of 4242424242424242.
+
+87
+00:03:16.140 --> 00:03:18.980
+Which is a generic test card number
+
+88
+00:03:18.980 --> 00:03:20.790
+that will always succeed.
+
+89
+00:03:20.790 --> 00:03:22.660
+I'll then set the expiration month.
+
+90
+00:03:22.660 --> 00:03:25.950
+We can just do one, expiration year.
+
+91
+00:03:25.950 --> 00:03:28.800
+I could hard code or I could do something like now()-&gt;addYear()
+
+92
+00:03:28.800 --> 00:03:29.633
+and then format it.
+
+93
+00:03:29.633 --> 00:03:31.750
+I'm just going to do something far in the future.
+
+94
+00:03:31.750 --> 00:03:33.830
+And then of course we need a CVC number.
+
+95
+00:03:33.830 --> 00:03:36.380
+And again, these can be anything you want.
+
+96
+00:03:36.380 --> 00:03:38.460
+Okay. So now when I make this call,
+
+97
+00:03:38.460 --> 00:03:42.030
+it will actually make an API request to Stripe's server.
+
+98
+00:03:42.030 --> 00:03:42.863
+And that's fine.
+
+99
+00:03:42.863 --> 00:03:44.230
+This is a feature test.
+
+100
+00:03:44.230 --> 00:03:45.800
+To be fully sure it works,
+
+101
+00:03:45.800 --> 00:03:48.220
+I need to interact with a real API.
+
+102
+00:03:48.220 --> 00:03:49.987
+So now I have a token,
+
+103
+00:03:49.987 --> 00:03:53.560
+which means when I create a subscription
+
+104
+00:03:53.560 --> 00:03:56.680
+and then I update the account, as a side effect,
+
+105
+00:03:56.680 --> 00:03:59.020
+and I've already implemented this behind the scenes,
+
+106
+00:03:59.020 --> 00:04:02.290
+it should also update the email address on Stripe's end.
+
+107
+00:04:02.290 --> 00:04:05.080
+So here's how I do that with the Laracasts API,
+
+108
+00:04:05.080 --> 00:04:06.660
+get the user subscription,
+
+109
+00:04:06.660 --> 00:04:08.230
+and then I have a method to grab the
+
+110
+00:04:08.230 --> 00:04:10.233
+corresponding Stripe customer.
+
+111
+00:04:11.320 --> 00:04:13.920
+So again, this is going to make an API request
+
+112
+00:04:13.920 --> 00:04:16.820
+to build up a Stripe specific object
+
+113
+00:04:16.820 --> 00:04:18.800
+directly from their servers.
+
+114
+00:04:18.800 --> 00:04:21.000
+And then I can read the email address.
+
+115
+00:04:21.000 --> 00:04:22.410
+So let's go over this one more time
+
+116
+00:04:22.410 --> 00:04:24.090
+and then we'll run the test.
+
+117
+00:04:24.090 --> 00:04:26.420
+Create a generic accountant in Laracasts,
+
+118
+00:04:26.420 --> 00:04:28.700
+and then prepare a billing token
+
+119
+00:04:28.700 --> 00:04:31.990
+and use that token to register a subscription.
+
+120
+00:04:31.990 --> 00:04:34.310
+So that we'll upgrade their account on our end,
+
+121
+00:04:34.310 --> 00:04:37.700
+but it will also create a new Stripe customer.
+
+122
+00:04:37.700 --> 00:04:39.260
+Next, make a PATCH request
+
+123
+00:04:39.260 --> 00:04:41.060
+to update the user's email address,
+
+124
+00:04:41.060 --> 00:04:43.210
+like they might do from their settings page.
+
+125
+00:04:43.210 --> 00:04:44.860
+And if we did everything correctly,
+
+126
+00:04:44.860 --> 00:04:47.830
+if I then track down that Stripe customer
+
+127
+00:04:47.830 --> 00:04:49.120
+from their API,
+
+128
+00:04:49.120 --> 00:04:51.910
+the email address on file should match the new one
+
+129
+00:04:51.910 --> 00:04:53.370
+and not the old one.
+
+130
+00:04:53.370 --> 00:04:56.980
+So, if we give this a run, ooh, no API keeper.
+
+131
+00:04:56.980 --> 00:04:57.980
+Oh yeah, of course.
+
+132
+00:04:57.980 --> 00:05:00.050
+Why don't we quickly say Stripe,
+
+133
+00:05:00.050 --> 00:05:02.364
+and normally I have this isolated away,
+
+134
+00:05:02.364 --> 00:05:04.790
+but I can use set API key
+
+135
+00:05:04.790 --> 00:05:06.793
+and this is in my config file.
+
+136
+00:05:08.437 --> 00:05:10.220
+Okay. You can ignore that.
+
+137
+00:05:10.220 --> 00:05:11.470
+So, now if we run this,
+
+138
+00:05:11.470 --> 00:05:12.635
+what you'll see is,
+
+139
+00:05:12.635 --> 00:05:14.240
+depending upon my connection,
+
+140
+00:05:14.240 --> 00:05:15.710
+this might take a little time,
+
+141
+00:05:15.710 --> 00:05:18.720
+and that's a real downside to this approach,
+
+142
+00:05:18.720 --> 00:05:21.280
+but it also gives you the assurance that your interaction
+
+143
+00:05:21.280 --> 00:05:23.370
+with the API actually works.
+
+144
+00:05:23.370 --> 00:05:26.640
+And that's actually pretty long in this case, eight seconds.
+
+145
+00:05:26.640 --> 00:05:28.160
+Usually, it's about half that time,
+
+146
+00:05:28.160 --> 00:05:31.420
+but even half is fairly long.
+
+147
+00:05:31.420 --> 00:05:34.420
+And it's just the penalty you pay to ensure that your
+
+148
+00:05:34.420 --> 00:05:37.800
+interaction with this API is what you expect.
+
+149
+00:05:37.800 --> 00:05:39.830
+So, here's what I usually do in these cases.
+
+150
+00:05:39.830 --> 00:05:43.060
+I will add an additional tag here.
+
+151
+00:05:43.060 --> 00:05:45.047
+I might say group API,
+
+152
+00:05:45.047 --> 00:05:47.170
+and this will allow me to run my tests,
+
+153
+00:05:47.170 --> 00:05:50.540
+but exclude anything that touches a real API and that will
+
+154
+00:05:50.540 --> 00:05:52.560
+often be something I want.
+
+155
+00:05:52.560 --> 00:05:53.393
+Okay.
+
+156
+00:05:53.393 --> 00:05:56.300
+But now what about any other test where I have to follow
+
+157
+00:05:56.300 --> 00:05:57.630
+this pattern here?
+
+158
+00:05:57.630 --> 00:06:00.250
+I don't want to repeat this code over and over.
+
+159
+00:06:00.250 --> 00:06:03.210
+So instead it would be nice if I could replace token
+
+160
+00:06:03.210 --> 00:06:04.470
+with a method call,
+
+161
+00:06:04.470 --> 00:06:07.320
+like createStripeToken().
+
+162
+00:06:07.320 --> 00:06:11.520
+So, let's begin by extracting this code here to a method,
+
+163
+00:06:11.520 --> 00:06:13.143
+createStripeToken(),
+
+164
+00:06:15.320 --> 00:06:17.330
+and then I can remove this call here.
+
+165
+00:06:17.330 --> 00:06:18.163
+Okay.
+
+166
+00:06:18.163 --> 00:06:22.875
+So, now this will return a call to Token::create().
+
+167
+00:06:22.875 --> 00:06:25.083
+And that'll return a token.
+
+168
+00:06:26.260 --> 00:06:29.150
+Okay. That's refactor step number one.
+
+169
+00:06:29.150 --> 00:06:31.200
+So, if I come back and run this again
+
+170
+00:06:31.200 --> 00:06:33.050
+and fast forward a few seconds,
+
+171
+00:06:33.050 --> 00:06:34.370
+that works as well,
+
+172
+00:06:34.370 --> 00:06:36.350
+but we still haven't solved that case of needing
+
+173
+00:06:36.350 --> 00:06:39.840
+to create a Stripe token from other test classes.
+
+174
+00:06:39.840 --> 00:06:43.930
+So, the next step is going to be to refactor this method.
+
+175
+00:06:43.930 --> 00:06:47.940
+I will now grab this and extract it to a trait.
+
+176
+00:06:47.940 --> 00:06:50.160
+I can do this in my tests directory.
+
+177
+00:06:50.160 --> 00:06:52.145
+Let's create a new class
+
+178
+00:06:52.145 --> 00:06:55.220
+and actually it'll be a trait.
+
+179
+00:06:55.220 --> 00:06:58.530
+Now, I'm going to call it, InteractsWithStripe.
+
+180
+00:06:58.530 --> 00:07:00.440
+And I actually learned this naming convention from
+
+181
+00:07:00.440 --> 00:07:02.530
+Taylor Otwell, who is the creator of Laravel.
+
+182
+00:07:02.530 --> 00:07:04.020
+And I like it a lot.
+
+183
+00:07:04.020 --> 00:07:07.300
+If you need to extract reusable functionality that interacts
+
+184
+00:07:07.300 --> 00:07:09.020
+with all these different services,
+
+185
+00:07:09.020 --> 00:07:11.810
+they can all follow this same naming convention.
+
+186
+00:07:11.810 --> 00:07:12.643
+Okay.
+
+187
+00:07:12.643 --> 00:07:16.820
+So, now I'll paste that method in, and reformat.
+
+188
+00:07:16.820 --> 00:07:17.830
+Okay.
+
+189
+00:07:17.830 --> 00:07:20.620
+The only remaining step is to
+
+190
+00:07:20.620 --> 00:07:21.520
+pull that in,
+
+191
+00:07:21.520 --> 00:07:23.673
+use InteractsWithStripe,
+
+192
+00:07:24.640 --> 00:07:26.950
+and then I'll add that as a trait.
+
+193
+00:07:26.950 --> 00:07:29.220
+Okay. So, if we did everything correctly,
+
+194
+00:07:29.220 --> 00:07:30.470
+let's give it another run
+
+195
+00:07:31.560 --> 00:07:32.830
+and it passes.
+
+196
+00:07:32.830 --> 00:07:34.890
+So, we have a more intuitive and
+
+197
+00:07:34.890 --> 00:07:36.550
+reusable approach here.
+
+198
+00:07:36.550 --> 00:07:37.383
+I like it.
+
