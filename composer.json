@@ -18,5 +18,8 @@
         "psr-4": {
             "Laracasts\\Transcriptions\\": "src/"
         }
+    },
+    "scripts": {
+        "test": "vendor/bin/phpunit"
     }
 }
