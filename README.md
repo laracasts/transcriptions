@@ -22,7 +22,6 @@ foreach ($transcription->lines() as $line) {
 composer test
 ```
 
-
 ## License
 
 This package is open-sourced software licensed under the [MIT](https://opensource.org/licenses/MIT) license.
