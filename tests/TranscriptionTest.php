@@ -47,8 +47,8 @@ class TranscriptionTest extends TestCase
     function it_renders_the_lines_as_html()
     {
         $expected = <<<EOT
-            <a href="?time=00:03">Here is an</a>
-            <a href="?time=00:04">example of a VTT file.</a>
+            <a href="?time=3" data-seconds="3">Here is an</a>
+            <a href="?time=4" data-seconds="4">example of a VTT file.</a>
             EOT;
 
         $this->assertEquals($expected, $this->transcription->lines()->asHtml());

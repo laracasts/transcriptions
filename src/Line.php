@@ -16,7 +16,7 @@ class Line implements JsonSerializable
 
     public function toHtml(): string
     {
-        return "<a href=\"?time={$this->beginningTimestamp()}\">{$this->body}</a>";
+        return "<a href=\"?time={$this->beginningSeconds()}\" data-seconds=\"{$this->beginningSeconds()}\">{$this->body}</a>";
     }
 
     public function beginningTimestamp(): string
