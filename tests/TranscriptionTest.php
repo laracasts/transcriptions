@@ -22,7 +22,7 @@ class TranscriptionTest extends TestCase
     /** @test */
     function it_loads_a_vtt_file_as_a_string()
     {
-        $this->assertStringContainsString('Here is a', $this->transcription);
+        $this->assertStringContainsString('Here is an', $this->transcription);
         $this->assertStringContainsString('example of a VTT file', $this->transcription);
     }
 
@@ -47,7 +47,7 @@ class TranscriptionTest extends TestCase
     function it_renders_the_lines_as_html()
     {
         $expected = <<<EOT
-            <a href="?time=00:03">Here is a</a>
+            <a href="?time=00:03">Here is an</a>
             <a href="?time=00:04">example of a VTT file.</a>
             EOT;
 
@@ -70,5 +70,14 @@ class TranscriptionTest extends TestCase
         
         $this->assertInstanceOf(JsonSerializable::class, $lines);
         $this->assertJson(json_encode($lines));
+    }
+
+    /** @test */
+    function it_groups_lines_by_sentence()
+    {
+        $lines = $this->transcription->lines()->groupBySentence();
+
+        $this->assertCount(1, $lines);
+        $this->assertEquals('Here is an example of a VTT file.', $lines[0]->body);
     }
 }
