@@ -70,6 +70,18 @@ class TranscriptionTest extends TestCase
         
         $this->assertInstanceOf(JsonSerializable::class, $lines);
         $this->assertJson(json_encode($lines));
+
+        $this->assertInstanceOf(JsonSerializable::class, $lines[0]);
+
+        $this->assertEquals([
+            'body' => 'Here is an',
+            'html' => $lines[0]->toHtml(),
+            'timestamp' => '00:00:03.210 --> 00:00:04.110',
+            'beginningTimestamp' => '00:03',
+            'endingTimestamp' => '00:04',
+            'beginningSeconds' => 3,
+            'endingSeconds' => 4,
+        ], $lines[0]->jsonSerialize());
     }
 
     /** @test */
