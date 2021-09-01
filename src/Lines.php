@@ -6,17 +6,15 @@ class Lines extends Collection
 {
     public function groupBySentence(): self
     {
-        $lines = [];
-
-        foreach ($this->items as $index => $line) {
-            if ($index > 0 && ! preg_match('/[.?!]$/', $lines[$index - 1]->body)) {
-                $lines[$index - 1]->body .= " {$line->body}";
+        return new static(array_reduce($this->items, function ($lines, $line) {
+            if (! empty($lines) && !preg_match('/[.?!]$/', end($lines)->body)) {
+                end($lines)->body .= " {$line->body}";
             } else {
                 $lines[] = $line;
             }
-        }
 
-        return new static($lines);
+            return $lines;
+        }, []));
     }
 
     public function asHtml(): string
