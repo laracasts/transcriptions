@@ -53,6 +53,11 @@ class Line implements JsonSerializable
         return intval($segments[0] * 60) + intval($segments[1]);
     }
 
+    public static function isTimestamp($line): bool
+    {
+       return preg_match("/\d{2}:\d{2}:\d{2}\.\d{3}/", $line);
+    }
+
     public function jsonSerialize(): array
     {
         return [

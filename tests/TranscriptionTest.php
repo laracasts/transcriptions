@@ -37,6 +37,20 @@ class TranscriptionTest extends TestCase
     }
 
     /** @test */
+    function it_works_with_multiline_strings()
+    {
+        $transcript = Transcription::load(
+            __DIR__ . '/stubs/multi-line-example.vtt'
+        );
+
+        $this->assertCount(4, $transcript->lines());
+        $this->assertEquals(
+            'Here is an example of a VTT file with cards that include multiple lines before moving',
+            $transcript->lines()[0]->body
+        );
+    }
+
+    /** @test */
     function it_discards_irrelevant_lines_from_the_vtt_file()
     {
         $this->assertStringNotContainsString('WEBVTT', $this->transcription);
