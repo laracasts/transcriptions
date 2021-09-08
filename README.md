@@ -10,10 +10,19 @@ use Laracasts\Transcriptions\Transcription;
 $transcription = Transcription::load('path/to/file.vtt');
 
 foreach ($transcription->lines() as $line) {
-    // $line->timestamp
     // $line->body
     // $line->toHtml()
+    
+    // $line->timestamp->begin()
+    // $line->timestamp->beginSeconds()
+    // $line->timestamp->end()
+    // $line->timestamp->endSeconds()
+    
+    // json_encode($line);
 }
+
+// Group lines into full sentences.
+// $transcription->lines()->groupBySentence();
 ```
 
 ## License
