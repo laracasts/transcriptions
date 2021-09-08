@@ -1,0 +1,17 @@
+{
+  "dependencies": {},
+  "devDependencies": {
+    "@prettier/plugin-php": "^0.17.4",
+    "prettier": "^2.3.2"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/laracasts/transcriptions.git"
+  },
+  "author": "Jeffrey Way",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/laracasts/transcriptions/issues"
+  },
+  "homepage": "https://github.com/laracasts/transcriptions#readme"
+}
