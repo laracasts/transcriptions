@@ -28,7 +28,7 @@ class Transcription
     {
         // 1. We'll start by trimming everything before the first timestamp.
         foreach ($lines as $index => $line) {
-            if (Timestamp::validate($line)) {
+            if (TimestampSpan::validate($line)) {
                 $lines = array_slice($lines, $index);
 
                 break;
@@ -46,7 +46,7 @@ class Transcription
         $lastMatch = 0;
 
         foreach ($lines as $index => $line) {
-            if (Timestamp::validate($line)) {
+            if (TimestampSpan::validate($line)) {
                 $lastMatch = $index;
                 $results[$lastMatch] = $line;
             }  else {

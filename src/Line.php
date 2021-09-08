@@ -6,13 +6,13 @@ use JsonSerializable;
 
 class Line implements JsonSerializable
 {
-    public Timestamp $timestamp;
+    public TimestampSpan $timestamp;
 
     public string $body;
 
     public function __construct(string $timestamp, string $body)
     {
-        $this->timestamp = new Timestamp($timestamp);
+        $this->timestamp = new TimestampSpan($timestamp);
         $this->body = $body;
     }
 

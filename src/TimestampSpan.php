@@ -2,7 +2,7 @@
 
 namespace Laracasts\Transcriptions;
 
-class Timestamp
+class TimestampSpan
 {
     public function __construct(protected string $timestamp)
     {
