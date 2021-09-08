@@ -28,7 +28,7 @@ class Transcription
     {
         // 1. We'll start by trimming everything before the first timestamp.
         foreach ($lines as $index => $line) {
-            if (Line::isTimestamp($line)) {
+            if (Timestamp::validate($line)) {
                 $lines = array_slice($lines, $index);
 
                 break;
@@ -41,26 +41,21 @@ class Transcription
             fn($line) => $line && !is_numeric($line)
         );
 
-        // 3. Last, we'll allow for multi-line strings.
-        $index = 0;
-        $lines = array_reduce(
-            $lines,
-            function ($carry, $line) use (&$index) {
-                if (Line::isTimestamp($line)) {
-                    $index = count($carry) - 1;
+        // 3. Finally, we'll allow for multi-line strings.
+        $results = [];
+        $lastMatch = 0;
 
-                    $carry[$index] = $line;
-                } else {
-                    $carry[$index + 1] ??= "";
-                    $carry[$index + 1] .= " " . $line;
-                }
+        foreach ($lines as $index => $line) {
+            if (Timestamp::validate($line)) {
+                $lastMatch = $index;
+                $results[$lastMatch] = $line;
+            }  else {
+                $results[$lastMatch + 1] ??= '';
+                $results[$lastMatch + 1] .= " {$line}";
+            }
+        }
 
-                return $carry;
-            },
-            []
-        );
-
-        return array_map("trim", $lines);
+        return array_map('trim', $results);
     }
 
     public function __toString(): string
