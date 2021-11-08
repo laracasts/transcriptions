@@ -6,7 +6,7 @@ class Lines extends Collection
 {
     public function groupBySentence(): self
     {
-        return new static(array_reduce($this->items, function ($lines, $line) {
+        return $this->reduce(function (array $lines, Line $line) {
             if (! empty($lines) && !preg_match('/[.?!]$/', end($lines)->body)) {
                 end($lines)->body .= " {$line->body}";
             } else {
@@ -14,7 +14,7 @@ class Lines extends Collection
             }
 
             return $lines;
-        }, []));
+        }, []);
     }
 
     public function asHtml(): string

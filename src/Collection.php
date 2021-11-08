@@ -23,6 +23,13 @@ class Collection implements Countable, IteratorAggregate, ArrayAccess, JsonSeria
         );
     }
 
+    public function reduce(callable $reducingFn, mixed $initial = null): self
+    {
+        return new static(
+            array_reduce($this->items, $reducingFn, $initial)
+        );
+    }
+
     public function offsetUnset($key)
     {
         unset($this->items[$key]);
