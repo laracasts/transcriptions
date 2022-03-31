@@ -23,7 +23,7 @@ class Collection implements Countable, IteratorAggregate, ArrayAccess, JsonSeria
         );
     }
 
-    public function offsetUnset($key)
+    public function offsetUnset($key): void
     {
         unset($this->items[$key]);
     }
@@ -33,7 +33,7 @@ class Collection implements Countable, IteratorAggregate, ArrayAccess, JsonSeria
         return $this->items[$key];
     }
 
-    public function offsetExists($key)
+    public function offsetExists($key): bool
     {
         return isset($this->items[$key]);
     }
@@ -43,7 +43,7 @@ class Collection implements Countable, IteratorAggregate, ArrayAccess, JsonSeria
         return new ArrayIterator($this->items);
     }
 
-    public function offsetSet($key, $value)
+    public function offsetSet($key, $value): void
     {
         if (is_null($key)) {
             $this->items[] = $value;
