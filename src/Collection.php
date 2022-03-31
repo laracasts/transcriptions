@@ -28,7 +28,7 @@ class Collection implements Countable, IteratorAggregate, ArrayAccess, JsonSeria
         unset($this->items[$key]);
     }
 
-    public function offsetGet($key)
+    public function offsetGet($key): mixed
     {
         return $this->items[$key];
     }
@@ -62,7 +62,7 @@ class Collection implements Countable, IteratorAggregate, ArrayAccess, JsonSeria
         return $this->items;
     }
 
-    public function jsonSerialize()
+    public function jsonSerialize(): mixed
     {
         return $this->toArray();
     }
