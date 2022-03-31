@@ -38,7 +38,7 @@ class Transcription
         // 2. Then, we'll remove all empty lines or numeric headlines.
         $lines = array_filter(
             array_map("trim", $lines),
-            fn($line) => $line && !is_numeric($line)
+            fn($line) => $line && !preg_match('/^[0-9]+$/', $line)
         );
 
         // 3. Finally, we'll allow for multi-line strings.
