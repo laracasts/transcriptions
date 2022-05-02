@@ -18,22 +18,20 @@ class Collection implements Countable, IteratorAggregate, ArrayAccess, JsonSeria
 
     public function map(callable $fn): self
     {
-        return new static(
-            array_map($fn, $this->items)
-        );
+        return new static(array_map($fn, $this->items));
     }
 
-    public function offsetUnset($key)
+    public function offsetUnset($key): void
     {
         unset($this->items[$key]);
     }
 
-    public function offsetGet($key)
+    public function offsetGet($key): mixed
     {
         return $this->items[$key];
     }
 
-    public function offsetExists($key)
+    public function offsetExists(mixed $key): bool
     {
         return isset($this->items[$key]);
     }
@@ -43,7 +41,7 @@ class Collection implements Countable, IteratorAggregate, ArrayAccess, JsonSeria
         return new ArrayIterator($this->items);
     }
 
-    public function offsetSet($key, $value)
+    public function offsetSet($key, $value): void
     {
         if (is_null($key)) {
             $this->items[] = $value;
@@ -62,7 +60,7 @@ class Collection implements Countable, IteratorAggregate, ArrayAccess, JsonSeria
         return $this->items;
     }
 
-    public function jsonSerialize()
+    public function jsonSerialize(): array
     {
         return $this->toArray();
     }
