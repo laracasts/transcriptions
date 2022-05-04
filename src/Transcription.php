@@ -16,12 +16,7 @@ class Transcription
 
     public function lines(): Lines
     {
-        return new Lines(
-            array_map(
-                fn($line) => new Line(...$line),
-                array_chunk($this->lines, 2)
-            )
-        );
+        return new Lines(array_map(fn($line) => new Line(...$line), array_chunk($this->lines, 2)));
     }
 
     protected function normalizeLines(array $lines): array
@@ -37,8 +32,8 @@ class Transcription
 
         // 2. Then, we'll remove all empty lines or numeric headlines.
         $lines = array_filter(
-            array_map("trim", $lines),
-            fn($line) => $line && !is_numeric($line)
+            array_map('trim', $lines),
+            fn($line) => $line && !preg_match('/^\s*\d+$/', $line)
         );
 
         // 3. Finally, we'll allow for multi-line strings.
@@ -49,13 +44,13 @@ class Transcription
             if (TimestampSpan::validate($line)) {
                 $lastMatch = $index;
                 $results[$lastMatch] = $line;
-            }  else {
+            } else {
                 $results[$lastMatch + 1] ??= '';
                 $results[$lastMatch + 1] .= " {$line}";
             }
         }
 
-        return array_map('trim', $results);
+        return array_values(array_map('trim', $results));
     }
 
     public function __toString(): string
