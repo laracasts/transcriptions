@@ -10,7 +10,7 @@ class Line implements JsonSerializable
 
     public string $body;
 
-    public function __construct(string $timestamp, string $body)
+    public function __construct(string $timestamp, string $body = '')
     {
         $this->timestamp = new TimestampSpan($timestamp);
         $this->body = $body;
