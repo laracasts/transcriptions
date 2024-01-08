@@ -2,6 +2,8 @@
 
 namespace Laracasts\Transcriptions;
 
+use Illuminate\Support\Facades\Storage;
+
 class Transcription
 {
     public function __construct(protected array $lines)
@@ -9,9 +11,17 @@ class Transcription
         $this->lines = $this->normalizeLines($lines);
     }
 
-    public static function load(string $path): self
+    public static function load(string $transcriptOrPath): self
     {
-        return new static(file($path));
+        $transcript = null;
+
+        if (preg_match('/WEBVTT/', $transcriptOrPath)) {
+            $transcript = explode("\n", $transcriptOrPath);
+        } else {
+            $transcript = file($transcriptOrPath);
+        }
+
+        return new static($transcript);
     }
 
     public function lines(): Lines
